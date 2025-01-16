@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JOC NFT</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Conecteaza-ti Wallet</h1>
+    <input type="file" id="pem-file" accept=".pem">
+    <button id="connect-wallet">Conecteaza Wallet</button>
+    <div id="loading-message" style="display: none; color: blue;">Asteapta cateva secunde pana te conectezi...</div>
+
+    <!-- Afișează adresa wallet-ului -->
+    <h2 id="wallet-info" style="display: none;">Wallet conectat: <span id="wallet-address"></span></h2>
+    
+
+
+        <!-- Butoanele pentru verificare -->
+        <div id="action-buttons" style="display: none;">
+            <button id="verify-piatra">Verifica Piatra</button>
+            <div id="message-piatra"></div> <!-- Container pentru mesajul "Piatra" -->
+            
+            <button id="verify-foarfeca">Verifica Foarfeca</button>
+            <div id="message-foarfeca"></div> <!-- Container pentru mesajul "Foarfeca" -->
+            
+            <button id="verify-hartie">Verifica Hartie</button>
+            <div id="message-hartie"></div> <!-- Container pentru mesajul "Hartie" -->
+            
+            <button id="joaca" disabled>Joaca</button>
+        </div>
+
+    <!-- Butoanele pentru generarea NFT-urilor, vor fi vizibile dar dezactivate -->
+    <div id="generate-buttons" style="display: none;">
+        <button id="generate-piatra" disabled>Genereaza Piatra NFT</button>
+        <button id="generate-foarfeca" disabled>Genereaza Foarfeca NFT</button>
+        <button id="generate-hartie" disabled>Genereaza Hartie NFT</button>
+    </div>
+
+
+
+    <script src="main.js"></script>
+</body>
+</html>

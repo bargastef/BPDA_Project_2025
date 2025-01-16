@@ -1,0 +1,165 @@
+/* ==== GENERAL ==== */
+.App {
+  text-align: center;
+  color: rgb(255, 255, 255);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ==== FUNDALURI ==== */
+/* Fundal complet blurat */
+.background-blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Culoare întunecată cu transparență */
+  backdrop-filter: blur(4px); /* Efect de blur */
+  z-index: 1; /* Fundal */
+}
+
+/* Chenar blurat */
+.overlay-box {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background: rgba(0, 0, 0, 0.4); /* Culoare întunecată cu transparență */
+  backdrop-filter: blur(5px);
+  border-radius: 15px;
+  z-index: 2;
+}
+
+/* Fundal Phaser */
+#phaser-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/public/assets/images/background.png') no-repeat center center;
+  background-size: cover; /* Stretch complet */
+  z-index: 0;
+}
+
+/* ==== SECȚIUNI ==== */
+/* Secțiunea principală */
+.App-header {
+  position: relative;
+  z-index: 10; /* Deasupra fundalului */
+  background-color: rgba(2, 0, 29, 0.6); /* Semitransparent */
+  padding: 20px;
+  border-radius: 20px; /* Margini ovale */
+  backdrop-filter: blur(5px);
+  width: 90%;
+  max-width: 600px;
+}
+
+/* Secțiunea PreparationStage */
+.App-header-preparation {
+  position: relative;
+  z-index: 10;
+  background-color: rgba(2, 0, 29, 0.6); /* Semitransparent */
+  padding: 20px;
+  border-radius: 20px; /* Margini ovale */
+  backdrop-filter: blur(5px);
+  width: 90%;
+  max-width: 600px;
+  color: white;
+}
+
+/* ==== LISTE ==== */
+.App-header ul,
+.App-header-preparation ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.App-header ul li,
+.App-header-preparation ul li {
+  margin: 5px 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* ==== TEXT ==== */
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* ==== BUTOANE ==== */
+.btn {
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #4cae4c;
+}
+
+/* Buton DevLogin */
+.dev-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dev-btn:hover {
+  background-color: darkred;
+}
+
+/* Buton Wallet */
+.wallet-btn {
+  background-color: #5cb85c;
+}
+
+.wallet-btn:hover {
+  background-color: #4cae4c;
+}
+
+/* ==== ANIMAȚII ==== */
+/* Mesaj DevLogin */
+.dev-login-message {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: 2px dashed #4cae4c;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 10px;
+  animation: fade-in 0.5s ease-in-out;
+}
+
+/* Animație simplă */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
