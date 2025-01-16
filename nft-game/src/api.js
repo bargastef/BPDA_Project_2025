@@ -1,24 +1,26 @@
-// src/api.js
+//src/api.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3001'; // Asigură-te că backend-ul rulează pe acest port
+const API_BASE_URL = 'http://localhost:5000';
 
-export const getDataFromContract = async () => {
+export const connectWallet = async (pemContent) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/getDataFromContract`);
+    const response = await axios.post(`${API_BASE_URL}/api/connect-wallet`, { pem: pemContent });
     return response.data;
   } catch (error) {
-    console.error('Eroare la obținerea datelor de la contract:', error);
+    console.error('Eroare la conectarea wallet-ului:', error);
     throw error;
   }
 };
 
-export const mintNFT = async (userAddress, tokenURI) => {
+export const fetchNFTs = async (wallet) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/mintNFT`, { userAddress, tokenURI });
+    const response = await axios.get(`${API_BASE_URL}/api/verify-nft`, {
+      params: { wallet },
+    });
     return response.data;
   } catch (error) {
-    console.error('Eroare la mintarea NFT-ului:', error);
+    console.error('Eroare la obținerea NFT-urilor:', error);
     throw error;
   }
 };

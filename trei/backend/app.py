@@ -5,6 +5,8 @@ import subprocess
 import requests
 import os
 from multiversx_sdk import Address
+import shutil
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -35,25 +37,32 @@ def extract_wallet_address(pem_path):
 
 @app.route("/api/connect-wallet", methods=["POST"])
 def connect_wallet():
-    pem_content = request.json.get("pem")
-    if not pem_content:
-        return jsonify({"status": "error", "message": "Fișierul .pem este gol."}), 400
-
-    # Salvează fișierul PEM primit
-    pem_path = "../uploaded_wallet.pem"
-    with open(pem_path, "w") as pem_file:
-        pem_file.write(pem_content)
-
-    # Extrage adresa din PEM
-    wallet_address = extract_wallet_address(pem_path)
-    if not wallet_address:
-        return jsonify({"status": "error", "message": "Eroare la preluarea adresei wallet-ului."}), 500
-
-    # Convertește adresa wallet-ului în format hexadecimal
     try:
-        wallet_hex = Address.from_bech32(wallet_address).hex()
+        print("Cerere primită pentru conectarea wallet-ului.")
+        pem_content = request.json.get("pem")
+        if not pem_content:
+            print("Eroare: Fișierul PEM este gol.")
+            return jsonify({"status": "error", "message": "Fișierul .pem este gol."}), 400
+
+        # Salvează fișierul PEM
+        pem_path = "uploaded_wallet.pem"
+        with open(pem_path, "w") as pem_file:
+            pem_file.write(pem_content)
+        print(f"Fișierul PEM salvat la: {pem_path}")
+
+        # Extrage adresa din PEM
+        wallet_address = extract_wallet_address(pem_path)
+        if not wallet_address:
+            print("Eroare la extragerea adresei din PEM.")
+            return jsonify({"status": "error", "message": "Eroare la preluarea adresei wallet-ului."}), 500
+        print(f"Adresa wallet-ului extrasă: {wallet_address}")
+
+        return jsonify({"status": "success", "walletAddress": wallet_address})
     except Exception as e:
-        return jsonify({"status": "error", "message": f"Eroare la conversia adresei: {e}"}), 500
+        print(f"Eroare internă în connect_wallet: {e}")
+        return jsonify({"status": "error", "message": f"Eroare internă: {e}"}), 500
+
+
 
     # Hardcode pentru identificatorul colecției și roluri
     collection_identifier = "47414d454b592d363836346339"  # GAMEKY-6864c9 în hex
@@ -84,13 +93,8 @@ def connect_wallet():
 @app.route("/api/verify-nft", methods=["GET"])
 def verify_nft():
     wallet = request.args.get("wallet")
-    nft_type = request.args.get("type")
-    
-    if not wallet or not nft_type:
-        return jsonify({"error": "Parametrii 'wallet' și 'type' sunt necesari"}), 400
-
-    # Verifică dacă numele NFT-ului conține tipul + adresa wallet-ului
-    nft_name = f"{nft_type}-{wallet}"  # De exemplu, 'Piatra-adresa-wallet'
+    if not wallet:
+        return jsonify({"error": "Parametrul 'wallet' este necesar"}), 400
 
     url = f"{DEVNET_API}/accounts/{wallet}/nfts"
     response = requests.get(url)
@@ -98,11 +102,10 @@ def verify_nft():
         return jsonify({"error": "Eroare la obținerea NFT-urilor"}), 500
 
     nfts = response.json()
-    for nft in nfts:
-        if nft.get("name", "").lower() == nft_name.lower():
-            return jsonify({"exists": True})
+    if not nfts:
+        return jsonify({"exists": False, "message": "Nu există NFT-uri asociate acestui wallet."})
 
-    return jsonify({"exists": False})
+    return jsonify({"exists": True, "nfts": nfts})
 
 
 @app.route("/api/create-nft", methods=["POST"])
