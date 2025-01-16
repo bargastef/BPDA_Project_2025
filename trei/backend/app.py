@@ -102,10 +102,13 @@ def verify_nft():
         return jsonify({"error": "Eroare la obținerea NFT-urilor"}), 500
 
     nfts = response.json()
+    print(f"NFT-uri obținute pentru {wallet}: {nfts}")  # Logăm NFT-urile pentru debugging
+
     if not nfts:
         return jsonify({"exists": False, "message": "Nu există NFT-uri asociate acestui wallet."})
 
     return jsonify({"exists": True, "nfts": nfts})
+
 
 
 @app.route("/api/create-nft", methods=["POST"])
