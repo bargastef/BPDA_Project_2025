@@ -1,4 +1,8 @@
+/* Aplicație full page */
+
+
 /* ==== GENERAL ==== */
+
 .App {
   text-align: center;
   color: rgb(255, 255, 255);
@@ -9,12 +13,14 @@
   align-items: center;
   position: relative;
   overflow: hidden;
+  min-height: 100vh;
+  
 }
 
 /* ==== FUNDALURI ==== */
 /* Fundal complet blurat */
 .background-blur {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;

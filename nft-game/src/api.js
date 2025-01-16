@@ -1,26 +1,28 @@
-//src/api.js
+// src/api.js
 import axios from 'axios';
 
-const API_BASE_URL = 'http://127.0.0.1:5000';
+// Adresa completă către serverul Flask
+const BASE_URL = 'http://localhost:5000/api'; 
+// Sau, dacă e pe alt IP: `http://172.25.130.5:5000/api`
 
-export const connectWallet = async (pemContent) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/api/connect-wallet`, { pem: pemContent });
-    return response.data;
-  } catch (error) {
-    console.error('Eroare la conectarea wallet-ului:', error);
-    throw error;
-  }
-};
+export async function connectWallet(pemContent) {
+  const response = await axios.post(`${BASE_URL}/connect-wallet`, {
+    pem: pemContent,
+  });
+  return response.data;
+}
 
-export const fetchNFTs = async (wallet) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/api/verify-nft`, {
-      params: { wallet },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Eroare la obținerea NFT-urilor:', error);
-    throw error;
-  }
-};
+export async function fetchNFTs(walletAddress) {
+  const response = await axios.get(`${BASE_URL}/verify-nft`, {
+    params: { wallet: walletAddress },
+  });
+  return response.data;
+}
+
+export async function createNFTOnChain(walletAddress, nftType) {
+  const response = await axios.post(`${BASE_URL}/create-nft`, {
+    wallet: walletAddress,
+    type: nftType,
+  });
+  return response.data;
+}
