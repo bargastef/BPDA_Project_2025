@@ -10,3 +10,6 @@ MarkupSafe==3.0.2
 requests==2.32.3
 urllib3==2.3.0
 Werkzeug==3.1.3
+flask_cors==3.0.10
+multiversx-sdk
+multiversx-sdk-cli

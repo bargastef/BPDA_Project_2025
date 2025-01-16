@@ -14,7 +14,8 @@ function App() {
   const [errorMessage, setErrorMessage] = useState(''); // Feedback pentru erori
   const [showDevLogin, setShowDevLogin] = useState(false); // Modul DevLogin
   const [pemFile, setPemFile] = useState(null); // Stocăm fișierul PEM
-  window.SHOW_DEV_LOGIN = 1;
+  const [selectedNFTs, setSelectedNFTs] = useState([]);
+  window.SHOW_DEV_LOGIN = 0;
 
 
   // Resetează datele wallet-ului
@@ -96,23 +97,34 @@ function App() {
   };
 
   // === Jocul propriu-zis ===
-  const handleRobotGame = () => {
-    setIsPlaying(true);
+  const handleRobotGame = (nfts) => {
+    // nfts vin din PreparationStage
+    console.log('handleRobotGame - NFTS:', nfts);
+    setSelectedNFTs(nfts);   // stocăm NFT-urile
+    setIsPlaying(true);      // trecem la ecranul Robot
   };
+
 
   if (isGameSetup && isPlaying) {
     return (
       <div className="App">
-        <RobotPlayingStage onBack={() => setIsPlaying(false)} />
+        <RobotPlayingStage
+          onBack={() => setIsPlaying(false)}
+          selectedNFTs={selectedNFTs}     // <--- Transmitem mai departe
+        />
       </div>
     );
   }
 
   if (isGameSetup && !isPlaying) {
+    
     return (
       <div className="App">
         <PhaserGame />
-        <PreparationStage onRobotGame={handleRobotGame} onLogout={handleLogout} />
+        <PreparationStage 
+          onRobotGame={handleRobotGame} 
+          onLogout={handleLogout} 
+        />
       </div>
     );
   }

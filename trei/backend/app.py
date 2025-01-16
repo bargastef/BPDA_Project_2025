@@ -219,7 +219,90 @@ def set_esdt_role():
         print("Eroare generală set-esdt-role:", ex)
         return jsonify({"status": "error", "message": str(ex)}), 500
 
+# ===================== 5) UPDATE NFT SCORE/WIN =====================
+@app.route("/api/update-nft-score", methods=["POST"])
+def update_nft_score():
+    """
+    Body JSON: { "identifier": "GAMEKY-6864c9-01", "score": 12, "win": 5 }
+    Face update la metadatele NFT pe blockchain:
+    #nftgame;type:X;score:12;win:5
+    """
+    try:
+        data = request.json
+        identifier = data.get("identifier")  # ex. "GAMEKY-6864c9-01"
+        new_score = data.get("score")
+        new_win = data.get("win")
 
+        if not identifier or new_score is None or new_win is None:
+            return jsonify({"status": "error", "message": "Parametri insuficienți"}), 400
+
+        # Extragem colecția și nonce din identifier
+        parts = identifier.split("-")  # ["GAMEKY", "6864c9", "01"]
+        if len(parts) < 3:
+            return jsonify({"status": "error", "message": "Identifier NFT invalid"}), 400
+        # primele două părți formează colecția "GAMEKY-6864c9", ultima e nonce
+        collection_part = f"{parts[0]}-{parts[1]}" 
+        nonce_hex = parts[2]  # "01" (hex direct)
+
+        # Ca exemplu, recitim tipul NFT din chain (opțional) – altfel îl punem fix
+        # Pentru simplitate, punem "foarfeca". În producție, ar trebui să-l citești corect.
+        # new_type = "foarfeca"
+        # ... DAR e mai bine să îl obținem chiar din NFT-ul existent
+        # Mai jos un call simplu (devnet) să luăm NFT-ul:
+        existing_nft_url = f"{DEVNET_API}/nfts/{identifier}"
+        r = requests.get(existing_nft_url)
+        if r.status_code != 200:
+            return jsonify({"status": "error", "message": "Nu am putut citi NFT-ul existent"}), 500
+        nft_data = r.json()  # conține "attributes" => "#nftgame;type:XXX;score:...,win:..."
+        
+        # Decodăm attributes (base64 -> text)
+        import base64
+        raw_attrs_b64 = nft_data.get("attributes", "")
+        raw_attrs = base64.b64decode(raw_attrs_b64).decode("utf-8") if raw_attrs_b64 else ""
+
+        # Exemplu: "#nftgame;type:foarfeca;score:0;win:0"
+        # Scoatem type existent
+        existing_type = "unknown"
+        segments = raw_attrs.split(";")
+        for seg in segments:
+            if seg.startswith("type:"):
+                existing_type = seg.split(":")[1].strip()
+
+        # Construim noile atribute
+        new_attributes = f"#nftgame;type:{existing_type};score:{new_score};win:{new_win}"
+        new_attributes_hex = new_attributes.encode('utf-8').hex()
+
+        # Apelăm comanda ESDTNFTUpdateAttributes
+        cmd = [
+            "mxpy", "tx", "new",
+            "--pem", PEM_PATH,
+            "--gas-limit", "5000000",
+            # La "receiver" putem folosi "erd1qqqq..." (address 0) pentru update
+            "--receiver", "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+            "--data", f"ESDTNFTUpdateAttributes@{COLLECTION_HEX}@{nonce_hex}@{new_attributes_hex}",
+            "--recall-nonce",
+            "--proxy", "https://devnet-gateway.multiversx.com",
+            "--chain", CHAIN_ID,
+            "--send"
+        ]
+
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        print("Update reusit:", result.stdout)
+        return jsonify({"status": "success", "message": "NFT metadata updated cu succes!"})
+
+    except subprocess.CalledProcessError as e:
+        print("Eroare la update-ul NFT:", e.stderr)
+        return jsonify({
+            "status": "error",
+            "message": "Eroare la update NFT",
+            "details": e.stderr
+        }), 500
+    except Exception as ex:
+        print("Eroare generală:", ex)
+        return jsonify({
+            "status": "error",
+            "message": str(ex)
+        }), 500
 # ===================== MAIN =====================
 if __name__ == "__main__":
     app.run(debug=True)

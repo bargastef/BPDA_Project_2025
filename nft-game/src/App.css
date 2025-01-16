@@ -78,6 +78,8 @@
   backdrop-filter: blur(5px);
   width: 90%;
   max-width: 600px;
+  overflow-y: auto; /* Permite scroll pe axa Y */
+  max-height: 80vh; /* Înălțime maximă (80% din înălțimea viewport-ului) */
   color: white;
 }
 

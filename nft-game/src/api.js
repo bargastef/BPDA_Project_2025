@@ -26,3 +26,15 @@ export async function createNFTOnChain(walletAddress, nftType) {
   });
   return response.data;
 }
+
+
+
+/** Noua funcție care trimite un POST la /api/update-nft-score */
+export async function updateNFTOnChain(identifier, score, win) {
+  const response = await axios.post(`${BASE_URL}/update-nft-score`, {
+    identifier,
+    score,
+    win
+  });
+  return response.data;
+}
