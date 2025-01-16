@@ -1,0 +1,17 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@multiversx/sdk-core": "^13.16.0",
+    "@multiversx/sdk-network-providers": "^2.9.3",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.1",
+    "express": "^4.21.2",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0"
+  }
+}

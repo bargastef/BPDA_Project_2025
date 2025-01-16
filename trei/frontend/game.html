@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jocul Piatra-Foarfeca-Hartie</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #end-message {
+            font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <h1>Joaca: Piatra-Foarfeca-Hartie</h1>
+    <div id="game-container">
+        <div id="scores">
+            <h2>Scoruri:</h2>
+            <p>Jucator: <span id="player-score">0</span></p>
+            <p>Robot: <span id="robot-score">0</span></p>
+        </div>
+        <div id="player-cards">
+            <h2>Alegerile tale:</h2>
+            <button id="player-piatra">Piatra</button>
+            <button id="player-foarfeca">Foarfeca</button>
+            <button id="player-hartie">Hartie</button>
+        </div>
+        <div id="robot-cards">
+            <h2>Alegerile robotului:</h2>
+            <button id="robot-card-1">Piatra</button>
+            <button id="robot-card-2">Foarfeca</button>
+            <button id="robot-card-3">Hartie</button>
+        </div>
+    </div>
+    <div id="result"></div>
+    <div id="end-message" style="text-align: center; font-size: 24px; font-weight: bold; color: green; margin-top: 20px;"></div>
+    <script src="game.js"></script>
+</body>
+</html>
